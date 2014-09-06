@@ -23,6 +23,36 @@ For now, [a shim is available](https://github.com/othiym23/async-listener), and
 [node-continuation-local-storage](https://github.com/othiym23/node-continuation-local-storage)
 already allows for persisting contexts.
 
+This example uses `continuation-local-storage` to initiate a logging context
+for each request, that will then be accessed every time something is logged. To
+demonstrate that the logging context is correctly persisted, the logging
+utility is used within asynchronous actions.
 
 To be somehow representative of a real production app, this example uses
 [Express](http://expressjs.com/) and [Bunyan](https://github.com/trentm/node-bunyan).
+
+Points of interest are:
+
+- context initialization: [middlewares/log-ctx.js](middlewares/log-ctx.js) (loaded in [app.js](app.js#31))
+- logging utility: [util/log.js](util/log.js)
+- logging example: [dummy-actions.js](dummy-actions.js)
+
+You can run the demo as follow:
+
+- Run `npm install` to load the dependencies.
+- Run `./bin/www` to start the application.
+- To display nice logs instead of raw JSON ones, you may want to pipe the
+output of the previous command into the `bunyan` utility:  
+`./bin/www | ./node_modules/.bin/bunyan`
+- Open your favorite browser and navigate to [http://localhost:3000](http://localhost:3000).
+- Click on the various "Action" links, and clear the session cookie at will
+with the dedicated button.
+- Observe the logs:
+    - the requestId and sessionId fields are persisted across asynchronous calls ;
+    - the requestId field is unique to each request ;
+    - the sessionId field is unique to each session.
+
+Additionally, you can observe that concurrent uses of the asynchronous
+functions do not mix logging contexts by running the following command:
+
+`./bin/concurrency-test | ./node_modules/.bin/bunyan`
