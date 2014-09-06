@@ -1,0 +1,21 @@
+#!/usr/bin/env node
+'use strict';
+
+var cls = require('continuation-local-storage');
+var logContext = cls.createNamespace('app-log-ctx');
+
+var actions = require('../dummy-actions');
+var rand = require('../util/random');
+
+actions.forEach(function (action, idx) {
+  logContext.run(function () {
+    logContext.set('requestId', 'request-for-action-' + idx);
+    logContext.set('sessionId', 'session-for-action-' + idx);
+
+    rand.executeAfterRandomTimeout(function () {
+      action(function () {
+        console.log('Action ' + idx + ': done.');
+      });
+    });
+  });
+});
