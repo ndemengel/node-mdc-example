@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express');
 var logger = require('../util/log').createLogger('actions');
 
@@ -16,7 +18,7 @@ function executeAfterRandomTimeout(fn) {
 //// Dummy Intermediate Actions
 
 function createIntermediateAction(number) {
-  return function(done) {
+  return function (done) {
     logger.info('Executing intermediate action ' + number + '...');
     done();
   };
@@ -32,9 +34,9 @@ for (var i = 0; i < 3; i++) {
 //// Dummy Actions
 
 function createAction(number) {
-  return function(done) {
+  return function (done) {
     logger.info('Executing action ' + number + '...');
-    executeAfterRandomTimeout(function() {
+    executeAfterRandomTimeout(function () {
       var intermediateAction = intermediateActions[randomInt(0, 3)];
       intermediateAction(done);
     });
@@ -44,7 +46,7 @@ function createAction(number) {
 var actions = [];
 
 for (var i = 0; i < 3; i++) {
- actions.push(createAction(i));
+  actions.push(createAction(i));
 }
 
 
@@ -52,7 +54,7 @@ for (var i = 0; i < 3; i++) {
 
 var router = express.Router();
 
-router.get('/:action', function(req, res) {
+router.get('/:action', function (req, res) {
   var actionNumber = req.params.action;
   var action = actions[actionNumber - 1];
   action(function whenDone() {

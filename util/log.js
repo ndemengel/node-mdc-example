@@ -1,10 +1,12 @@
+'use strict';
+
 var bunyan = require('bunyan');
 var cls = require('continuation-local-storage');
 
 var logContext = cls.getNamespace('app-log-ctx');
 
 function decorateLogMethod(logMethod) {
-  return function() {
+  return function () {
     var args = Array.prototype.slice.call(arguments); // clone
     args.unshift({
       requestId: logContext.get('requestId'),
@@ -15,7 +17,7 @@ function decorateLogMethod(logMethod) {
 }
 
 function decorateChildMethod(childCreator) {
-  return function() {
+  return function () {
     return new Logger(childCreator.apply(undefined, arguments));
   };
 }
@@ -36,7 +38,7 @@ function Logger(bunyanLogger) {
       }
 
     } else {
-       this[key] = attribute;
+      this[key] = attribute;
     }
   }
 }

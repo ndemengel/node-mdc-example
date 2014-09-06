@@ -1,8 +1,10 @@
+'use strict';
+
 var express = require('express');
 
 var router = express.Router();
 
-router.get('/', function(req, res) {
+router.get('/', function (req, res) {
   res.send([
     '<html>',
       '<head><title>Node MDC Example</title></head>',
@@ -26,12 +28,12 @@ router.get('/', function(req, res) {
           '',
           'function clearCookie() {',
             'console.log(document.cookie);',
-            'document.cookie = encodeURIComponent("connect.sid") + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT";',
+            'document.cookie = "sid=; expires=Thu, 01 Jan 1970 00:00:00 GMT";',
             'console.log(document.cookie);',
           '}',
         '</script>',
       '</body>',
-    '</html>',
+    '</html>'
   ].join('\n'));
 });
 
